@@ -1,8 +1,39 @@
  const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-<View style={{flexDirection: 'row', justifyContent: 'space-around', paddingVertical: 5,}}>
-  {daysOfWeek.map((day, index) => (
-    <Text key={index} style={{ fontSize: 14, fontWeight: 'bold', color: '#000' }}>
-      {day}
-    </Text>
-  ))}
-</View>
+ return(
+          <View>
+            <View style={{ flexDirection: "row", justifyContent: "center", gap: 10 }}>
+              <select name="january" onChange={() => {
+                console.log(21321, 'xxx')
+                e.addMonth?.(1)
+              }}>
+                <option value="january">January</option>
+                <option value="feb">feb</option>
+                <option value="march">march</option>
+              </select>
+              <select name={"2024"}>
+                <option value="2024">2024</option>
+                <option value="2024">2024</option>
+                <option value="2024">2024</option>
+                <option value="2024">2024</option>
+                <option value="2024">2024</option>
+                <option value="2024">2024</option>
+                <option value="2024">2024</option>
+                <option value="2024">2024</option>
+                <option value="2024">2024</option>
+              </select>
+            </View>
+
+            <View style={{ marginTop: 10 }}>
+              <Text style={{ textAlign: "center", fontSize: 16, fontWeight: 'bold', color: '#000', marginBottom: 5 }}>
+                October
+              </Text>
+              <View style={{flexDirection: 'row', justifyContent: 'space-around', paddingVertical: 5,}}>
+                {daysOfWeek.map((day, index) => (
+                  <Text key={index} style={{ fontSize: 14, fontWeight: 'bold', color: '#000' }}>
+                    {day}
+                  </Text>
+                ))}
+              </View>
+            </View>
+          </View>
+        )
