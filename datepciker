@@ -1,31 +1,94 @@
- const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
- return(
+import React, { ComponentProps, useEffect } from 'react';
+import { StyleProp, ViewStyle, StyleSheet, View, Text } from 'react-native';
+import { Calendar as RawDatePicker } from 'react-native-calendars';
+import { MaterialIcons } from '@expo/vector-icons';
+import moment from 'moment';
+import { formatDate } from '../helpers/dateUtils';
+
+type _Props = ComponentProps<typeof RawDatePicker>;
+
+type Props = _Props & {
+  selectedDate: Date;
+  onDateSelect: (date: Date) => void;
+  style?: StyleProp<ViewStyle>;
+};
+
+function DatePicker({
+  selectedDate,
+  onDateSelect,
+  style,
+  ...otherProps
+}: Props) {
+  const [_selected, _setSelected] = React.useState(new Date());
+  useEffect(() => {
+    _setSelected(selectedDate)
+  }, [])
+
+  console.log('selectedDate', selectedDate)
+  const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+  const handleMonthChange = (val: any, e: any) => {
+    const selected = moment(_selected);
+    const changeDate = moment(_selected);
+    changeDate.month(Number(val.target.value));
+    const diff = Number(changeDate.diff(selected, 'months', true)).toFixed(0);
+    console.log(21321, moment(selected).format("YYYY-MM-DD"), moment(changeDate).format("YYYY-MM-DD"), val.target.value, Number(diff))
+
+    _setSelected(changeDate.toDate())
+    return e.addMonth?.(diff)
+  }
+  
+  const handleYearChange = (val: any, e: any) => {
+    const selected = moment(_selected);
+    const changeDate = moment(_selected);
+    changeDate.year(Number(val.target.value));
+    const diff = Number(changeDate.diff(selected, 'months', true)).toFixed(0);
+    console.log(21321, 1, moment(selected).format("YYYY-MM-DD"), moment(changeDate).format("YYYY-MM-DD"), val.target.value, Number(diff))
+    
+    _setSelected(changeDate.toDate())
+    return e.addMonth?.(diff)
+  }
+
+  return (
+    <RawDatePicker
+      // markedDates={{
+      //   [String(formatDate(selectedDate, 'YYYY-MM-DD'))]: {
+      //     selected: true,
+      //   },
+      // }}
+      // onDayPress={({ timestamp }) => {
+      //   onDateSelect(new Date(timestamp));
+      // }}
+      // style={[style, styles.datePicker]}
+      // monthFormat="MMMM yyyy"
+      // renderArrow={(direction) => (
+      //   <MaterialIcons size={24} name={`keyboard-arrow-${direction}`} />
+      // )}
+      // onPressArrowLeft={(substractMonth) => substractMonth()}
+      // onPressArrowRight={(addMonth) => addMonth()}
+      // current={String(formatDate(selectedDate, 'YYYY-MM-DD'))}
+      // enableSwipeMonths={true}
+      // hideDayNames={false}
+      customHeader={(event: any)=> {
+        return(
           <View>
             <View style={{ flexDirection: "row", justifyContent: "center", gap: 10 }}>
-              <select name="january" onChange={() => {
-                console.log(21321, 'xxx')
-                e.addMonth?.(1)
-              }}>
-                <option value="january">January</option>
-                <option value="feb">feb</option>
-                <option value="march">march</option>
+              <select name={moment(_selected).format("MM")} onChange={(val: any) => handleMonthChange(val, event)}>
+                {moment.months().map((month, index) => (
+                  <option key={index} value={index} selected={moment(_selected).month() === index}>{month}</option>
+                ))}
               </select>
-              <select name={"2024"}>
+              <select name={moment(_selected).format("YYYY")} onChange={(val: any) => handleYearChange(val, event)}>
                 <option value="2024">2024</option>
-                <option value="2024">2024</option>
-                <option value="2024">2024</option>
-                <option value="2024">2024</option>
-                <option value="2024">2024</option>
-                <option value="2024">2024</option>
-                <option value="2024">2024</option>
-                <option value="2024">2024</option>
-                <option value="2024">2024</option>
+                <option value="2023">2023</option>
+                <option value="2022">2022</option>
+                <option value="2021">2021</option>
               </select>
             </View>
 
             <View style={{ marginTop: 10 }}>
               <Text style={{ textAlign: "center", fontSize: 16, fontWeight: 'bold', color: '#000', marginBottom: 5 }}>
-                October
+                {moment(_selected).format("MMMM")}
               </Text>
               <View style={{flexDirection: 'row', justifyContent: 'space-around', paddingVertical: 5,}}>
                 {daysOfWeek.map((day, index) => (
@@ -37,3 +100,20 @@
             </View>
           </View>
         )
+      }}
+      {...otherProps}
+    />
+  );
+}
+
+let styles = StyleSheet.create({
+  datePicker: {
+    borderWidth: 1,
+    borderColor: '#eee',
+    padding: 10,
+    margin: 10,
+    width: 350,
+  },
+});
+
+export default DatePicker;
